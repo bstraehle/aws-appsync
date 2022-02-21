@@ -4,8 +4,8 @@ Test:
 
 - In Postman collection, for each request, update URL  
 - In Postman collection, for each request, update header x-api-key  
-- In Postman collection, for each request body, update GraphQL query  
-- In Postman collection, for each request body, update GraphQL variables  
+- In Postman collection, for each request, update body GraphQL query  
+- In Postman collection, for each request, update body GraphQL variables  
 - Send requests  
 
 Tear down:  
