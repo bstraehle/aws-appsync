@@ -1,6 +1,6 @@
 Login to the AWS Console, go to AppSync, and create an API  
 
-Test:  
+Tests:  
 
 - In Postman collection, for each request, update URL  
 - In Postman collection, for each request, update header x-api-key  
