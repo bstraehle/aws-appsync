@@ -1,4 +1,6 @@
-Login to the AWS Console, go to AppSync, and create an API  
+Start up:  
+
+- Login to the AWS Console, go to AppSync, and create an API  
 
 Tests:  
 
