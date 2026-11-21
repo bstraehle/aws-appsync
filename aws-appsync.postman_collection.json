@@ -2,70 +2,214 @@
 	"info": {
 		"_postman_id": "2cdd71cb-35e9-402c-82a7-d0d5c5ec9e5f",
 		"name": "aws-appsync",
+		"description": "Set graphqlUrl (stack output GraphQLUrl) and apiKey, then run the requests in order; createDemo stores demoId for the others.",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "get all items",
+			"name": "createDemo",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "x-api-key",
-						"value": "{{api-key}}",
+						"value": "{{apiKey}}",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "query listDemos {\r\n  listDemos {\r\n    items {\r\n      id\r\n      name\r\n    }\r\n  }\r\n}",
-						"variables": ""
+						"query": "mutation createDemo($input: CreateDemoInput!) {\n  createDemo(input: $input) { id name createdAt updatedAt }\n}",
+						"variables": "{\n  \"input\": {\n    \"name\": \"Hello, World!\"\n  }\n}"
 					}
 				},
 				"url": {
-					"raw": "https://{{domain}}/graphql",
-					"protocol": "https",
+					"raw": "{{graphqlUrl}}",
 					"host": [
-						"{{domain}}"
-					],
-					"path": [
-						"graphql"
+						"{{graphqlUrl}}"
 					]
 				}
 			},
-			"response": []
+			"response": [],
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"no GraphQL errors\", () => pm.expect(pm.response.json().errors).to.be.undefined);",
+							"pm.collectionVariables.set(\"demoId\", pm.response.json().data.createDemo.id);"
+						]
+					}
+				}
+			]
 		},
 		{
-			"name": "create item",
+			"name": "getDemo",
 			"request": {
 				"method": "POST",
 				"header": [
 					{
 						"key": "x-api-key",
-						"value": "{{api-key}}",
+						"value": "{{apiKey}}",
 						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "graphql",
 					"graphql": {
-						"query": "mutation createDemo($createdemoinput: CreateDemoInput!) {\r\n  createDemo(input: $createdemoinput) {\r\n    id\r\n    name\r\n  }\r\n}",
-						"variables": "{\r\n  \"createdemoinput\": {\r\n    \"name\": \"Hello, World!\"\r\n  }\r\n}"
+						"query": "query getDemo($id: ID!) {\n  getDemo(id: $id) { id name createdAt updatedAt }\n}",
+						"variables": "{\n  \"id\": \"{{demoId}}\"\n}"
 					}
 				},
 				"url": {
-					"raw": "https://{{domain}}/graphql",
-					"protocol": "https",
+					"raw": "{{graphqlUrl}}",
 					"host": [
-						"{{domain}}"
-					],
-					"path": [
-						"graphql"
+						"{{graphqlUrl}}"
 					]
 				}
 			},
-			"response": []
+			"response": [],
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"no GraphQL errors\", () => pm.expect(pm.response.json().errors).to.be.undefined);"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "listDemos",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query listDemos($filter: DemoFilterInput, $limit: Int, $nextToken: String) {\n  listDemos(filter: $filter, limit: $limit, nextToken: $nextToken) {\n    items { id name createdAt updatedAt }\n    nextToken\n  }\n}",
+						"variables": "{\n  \"filter\": {\n    \"name\": {\n      \"beginsWith\": \"Hello\"\n    }\n  },\n  \"limit\": 20\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graphqlUrl}}",
+					"host": [
+						"{{graphqlUrl}}"
+					]
+				}
+			},
+			"response": [],
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"no GraphQL errors\", () => pm.expect(pm.response.json().errors).to.be.undefined);"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "updateDemo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation updateDemo($input: UpdateDemoInput!) {\n  updateDemo(input: $input) { id name createdAt updatedAt }\n}",
+						"variables": "{\n  \"input\": {\n    \"id\": \"{{demoId}}\",\n    \"name\": \"Hello again\"\n  }\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graphqlUrl}}",
+					"host": [
+						"{{graphqlUrl}}"
+					]
+				}
+			},
+			"response": [],
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"no GraphQL errors\", () => pm.expect(pm.response.json().errors).to.be.undefined);"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "deleteDemo",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation deleteDemo($input: DeleteDemoInput!) {\n  deleteDemo(input: $input) { id name createdAt updatedAt }\n}",
+						"variables": "{\n  \"input\": {\n    \"id\": \"{{demoId}}\"\n  }\n}"
+					}
+				},
+				"url": {
+					"raw": "{{graphqlUrl}}",
+					"host": [
+						"{{graphqlUrl}}"
+					]
+				}
+			},
+			"response": [],
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"no GraphQL errors\", () => pm.expect(pm.response.json().errors).to.be.undefined);"
+						]
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "graphqlUrl",
+			"value": "https://<api-id>.appsync-api.<region>.amazonaws.com/graphql"
+		},
+		{
+			"key": "apiKey",
+			"value": "<api-key>"
+		},
+		{
+			"key": "demoId",
+			"value": ""
 		}
 	]
 }

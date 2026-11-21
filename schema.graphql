@@ -1,105 +1,67 @@
-﻿schema {
+schema {
   query: Query
   mutation: Mutation
   subscription: Subscription
 }
 
-type Mutation {
-  createMyModelType(input: CreateMyModelTypeInput!): MyModelType
-  deleteMyModelType(input: DeleteMyModelTypeInput!): MyModelType
-  updateMyModelType(input: UpdateMyModelTypeInput!): MyModelType
-}
-
-type MyModelType {
+type Demo {
   id: ID!
-  name: String
+  name: String!
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }
 
-type MyModelTypeConnection {
-  items: [MyModelType]
+type DemoConnection {
+  items: [Demo!]!
   nextToken: String
 }
 
-type Query {
-  getMyModelType(id: ID!): MyModelType
-  listMyModelTypes(filter: TableMyModelTypeFilterInput, limit: Int, nextToken: String): MyModelTypeConnection
+input CreateDemoInput {
+  name: String!
 }
 
-type Subscription {
-  onCreateMyModelType(id: ID, name: String): MyModelType @aws_subscribe(mutations : ["createMyModelType"])
-  onDeleteMyModelType(id: ID, name: String): MyModelType @aws_subscribe(mutations : ["deleteMyModelType"])
-  onUpdateMyModelType(id: ID, name: String): MyModelType @aws_subscribe(mutations : ["updateMyModelType"])
+input UpdateDemoInput {
+  id: ID!
+  name: String!
 }
 
-input CreateMyModelTypeInput {
-  name: String
-}
-
-input DeleteMyModelTypeInput {
+input DeleteDemoInput {
   id: ID!
 }
 
-input TableBooleanFilterInput {
-  eq: Boolean
-  ne: Boolean
-}
-
-input TableFloatFilterInput {
-  between: [Float]
-  contains: Float
-  eq: Float
-  ge: Float
-  gt: Float
-  le: Float
-  lt: Float
-  ne: Float
-  notContains: Float
-}
-
-input TableIDFilterInput {
-  beginsWith: ID
-  between: [ID]
-  contains: ID
+input IDFilterInput {
   eq: ID
-  ge: ID
-  gt: ID
-  le: ID
-  lt: ID
   ne: ID
-  notContains: ID
+  beginsWith: ID
 }
 
-input TableIntFilterInput {
-  between: [Int]
-  contains: Int
-  eq: Int
-  ge: Int
-  gt: Int
-  le: Int
-  lt: Int
-  ne: Int
-  notContains: Int
-}
-
-input TableMyModelTypeFilterInput {
-  id: TableIDFilterInput
-  name: TableStringFilterInput
-}
-
-input TableStringFilterInput {
-  beginsWith: String
-  between: [String]
-  contains: String
+input StringFilterInput {
   eq: String
-  ge: String
-  gt: String
-  le: String
-  lt: String
   ne: String
+  beginsWith: String
+  contains: String
   notContains: String
 }
 
-input UpdateMyModelTypeInput {
-  id: ID!
-  name: String
+input DemoFilterInput {
+  id: IDFilterInput
+  name: StringFilterInput
+}
+
+type Query {
+  getDemo(id: ID!): Demo
+  "Scans the table; limit defaults to 20 and is capped at 100."
+  listDemos(filter: DemoFilterInput, limit: Int, nextToken: String): DemoConnection!
+}
+
+type Mutation {
+  createDemo(input: CreateDemoInput!): Demo
+  updateDemo(input: UpdateDemoInput!): Demo
+  deleteDemo(input: DeleteDemoInput!): Demo
+}
+
+type Subscription {
+  onCreateDemo(name: String): Demo @aws_subscribe(mutations: ["createDemo"])
+  onUpdateDemo(id: ID, name: String): Demo @aws_subscribe(mutations: ["updateDemo"])
+  onDeleteDemo(id: ID, name: String): Demo @aws_subscribe(mutations: ["deleteDemo"])
 }
