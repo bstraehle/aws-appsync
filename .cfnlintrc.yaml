@@ -1,0 +1,7 @@
+# cfn-lint (1.58-1.61) reports GetAtt/Sub references to the
+# AWS::Serverless::GraphQLApi's GraphQLUrl and ApiId as invalid, although the
+# SAM transform produces an AWS::AppSync::GraphQLApi that has them. CI also
+# lints the transformed template without these exclusions.
+ignore_checks:
+  - E1019
+  - E6101

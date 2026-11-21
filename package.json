@@ -1,0 +1,16 @@
+{
+  "name": "aws-appsync",
+  "private": true,
+  "description": "Serverless GraphQL API using AWS AppSync and Amazon DynamoDB",
+  "license": "Apache-2.0",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint resolvers"
+  },
+  "devDependencies": {
+    "@aws-appsync/eslint-plugin": "2.0.2",
+    "@aws-appsync/utils": "2.1.1",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3"
+  }
+}
