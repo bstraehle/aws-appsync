@@ -12,6 +12,12 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    ignore:
+      # @aws-appsync/eslint-plugin 2.x supports eslint ^8.57 || ^9 and typescript ^3.9 || ^4 || ^5.
+      - dependency-name: eslint
+        update-types: ["version-update:semver-major"]
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: pip
     directory: /
     schedule:
